@@ -103,8 +103,8 @@ graph TD
 
 ### Step 1: Clone Repository
 ```bash
-git clone https://github.com/vmukesharav-sudo/orbit-studymate.git
-cd orbit-studymate
+git clone https://github.com/vmukesharav-sudo/orbit-studymate-ai.git
+cd orbit-studymate-ai
 ```
 
 ### Step 2: Configure Backend Environment
@@ -175,7 +175,44 @@ ALL 9 TEST SUITES PASSED FLAWLESSLY!
 
 ---
 
-## 📚 8. REST API Endpoints Overview
+## 🌐 8. Production Deployment Guide (Vercel & Render)
+
+ORBIT is pre-configured with Infrastructure-as-Code for zero-hassle cloud deployment:
+
+### Backend: FastAPI on Render (with Managed PostgreSQL)
+
+Render provides automated CI/CD and managed PostgreSQL:
+
+1. **Deploy with Blueprint (`render.yaml`):**
+   - In Render Dashboard, click **New +** -> **Blueprint**.
+   - Connect repository `https://github.com/vmukesharav-sudo/orbit-studymate-ai`.
+   - Render automatically provisions the **FastAPI Web Service** and a **PostgreSQL Database** linked via `DATABASE_URL`.
+2. **Required Environment Variables on Render:**
+   - `GEMINI_API_KEY`: Your real Google Gemini API key from AI Studio.
+   - `GEMINI_MODEL`: `gemini-2.5-flash`
+   - `SECRET_KEY`: High-entropy string for JWT signing (Render auto-generates this if using `render.yaml`).
+   - `ENVIRONMENT`: `production`
+   - `DATABASE_URL`: Automatically populated from the Render managed PostgreSQL database (`postgresql://...`).
+
+### Frontend: React + Vite on Vercel
+
+Vercel provides edge hosting and automatic SSL:
+
+1. **Import Project to Vercel:**
+   - In Vercel Dashboard, click **Add New...** -> **Project**.
+   - Select `orbit-studymate-ai`.
+   - Set **Framework Preset**: `Vite`.
+   - Set **Root Directory**: `frontend` (or leave as `./` — root `vercel.json` handles monorepo build).
+2. **Configure Environment Variables on Vercel:**
+   - `VITE_API_URL`: Your deployed Render backend URL, e.g.:
+     ```text
+     https://orbit-studymate-backend.onrender.com/api
+     ```
+3. **Deploy:** Click **Deploy**. Vercel will build the frontend and serve it with client-side SPA routing (`vercel.json`).
+
+---
+
+## 📚 9. REST API Endpoints Overview
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
@@ -199,7 +236,7 @@ ALL 9 TEST SUITES PASSED FLAWLESSLY!
 
 ---
 
-## 🔒 9. Security & Privacy Architecture
+## 🔒 10. Security & Privacy Architecture
 
 1. **Strict User Isolation:** All database queries filter explicitly by `user_id == current_user.id`. One student cannot read, edit, or delete another student's materials.
 2. **Hidden Exam Integrity:** When generating quizzes, correct answers and detailed explanations are **omitted** from the client payload during the quiz attempt. Scoring is performed exclusively on the backend upon submission.
@@ -208,7 +245,7 @@ ALL 9 TEST SUITES PASSED FLAWLESSLY!
 
 ---
 
-## 👨‍💻 10. Author & Project Credits
+## 👨‍💻 11. Author & Project Credits
 
 - **Developer:** Mukesh Arav V.
 - **GitHub:** [@vmukesharav-sudo](https://github.com/vmukesharav-sudo)

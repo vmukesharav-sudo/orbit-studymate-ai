@@ -5,7 +5,7 @@ import {
   UserSettings, StudyMode
 } from '../types';
 
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
 
 class ApiService {
   private getToken(): string | null {
@@ -25,7 +25,8 @@ class ApiService {
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${API_BASE}${endpoint}`;
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${API_BASE}${cleanEndpoint}`;
     const headers = this.getHeaders(options.body instanceof FormData);
 
     const response = await fetch(url, {

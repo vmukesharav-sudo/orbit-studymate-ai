@@ -1,13 +1,20 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.core.config import settings
 
-# SQLite connection args for multi-threading in FastAPI
-connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+# Normalize Render/Heroku/Supabase postgres:// URL to postgresql:// for SQLAlchemy
+database_url = settings.DATABASE_URL
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+# SQLite connection args vs PostgreSQL connection pooling
+connect_args = {"check_same_thread": False} if database_url.startswith("sqlite") else {}
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    database_url,
     connect_args=connect_args,
+    pool_pre_ping=True,
     echo=False
 )
 
@@ -21,4 +28,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
