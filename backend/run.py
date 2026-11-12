@@ -13,7 +13,7 @@ if __name__ == "__main__":
         port = 8000
 
     host = os.getenv("HOST", "0.0.0.0")
-    is_prod = os.getenv("ENVIRONMENT", "development").lower() == "production"
+    is_prod = os.getenv("ENVIRONMENT", "development").lower() == "production" or os.getenv("RENDER") == "true"
 
     print(f"Starting ORBIT Backend on {host}:{port} (Environment: {'Production' if is_prod else 'Development'})", flush=True)
     uvicorn.run("app.main:app", host=host, port=port, reload=not is_prod)

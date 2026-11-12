@@ -56,12 +56,13 @@ app.include_router(user_settings_route.router, prefix=settings.API_V1_STR)
 @app.get("/api/health")
 def health_check():
     has_key = bool(settings.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY"))
+    db_status = "sqlite_connected" if "sqlite" in engine.url.drivername else "postgresql_connected"
     return {
         "status": "online",
         "service": "ORBIT – Gemini StudyMate AI",
         "gemini_model": settings.GEMINI_MODEL,
         "api_key_configured": has_key,
-        "database": "sqlite_connected"
+        "database": db_status
     }
 
 @app.get("/")
