@@ -6,5 +6,6 @@
   "extraPaths": [
     "backend"
   ],
-  "pythonPath": "C:\\Users\\Mukesh arav\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+  "venvPath": ".",
+  "venv": ".venv"
 }
